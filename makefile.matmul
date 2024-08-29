@@ -1,0 +1,23 @@
+HEADERS=../standalone/matmul_include/basic.cpp ../standalone/matmul_include/cmdparser.cpp ../standalone/matmul_include/oclobject.cpp
+PCMROOT=/opt/intel/pcm
+MKLROOT = /opt/intel/compilers_and_libraries_2019.3.199/linux/mkl
+MKL_BASE_FLAGS          := -I$(MKLROOT)/include
+MKL_CFLAGS              := -std=c++11 -fopenmp -m64 -Wl,--no-as-needed -fPIC -O3 -lmkl_avx2 -lmkl_def -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lpthread -lm -ldl
+MKL_LFLAGS              := -L$(MKLROOT)/lib/intel64
+
+ifeq ($(CONFIG),debug)
+	OPT =-O0 -g
+else
+	OPT =
+endif
+
+EXE=matmul
+
+all: clean $(EXE)
+
+$(EXE):
+	g++ $(HEADERS) -fopenmp -I$(PCMROOT) -I$(MKLROOT)/include -I../standalone/matmul_include  matmul.cc ../standalone/matmul_kernel.cc -o $(EXE) -L$(PCMROOT)/pcm.so -lpcm -L$(MKLROOT)/lib/intel64 -lmkl_avx2  -lmkl_intel_lp64 -lmkl_core -lmkl_gnu_thread -lm -lOpenCL -std=gnu++0x $(OPT) $(MKL_LFLAGS) $(MKL_BASE_FLAGS) $(MKL_CFLAGS) 
+
+clean:
+	rm -f $(EXE)
+
