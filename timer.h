@@ -1,9 +1,10 @@
 #include <sys/time.h>
-#include "cpucounters.h"
+#include "../pcm/src/cpucounters.h"
 #include "utils.h"
 #include <iostream>
 
 using namespace std;
+using namespace	pcm;
 
 PCM *___pcm;
 SystemCounterState ___before_sstate, ___after_sstate;
